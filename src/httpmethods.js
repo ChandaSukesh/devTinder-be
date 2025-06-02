@@ -38,6 +38,24 @@ app.post("/postUser", (req, res) => {
 //   });
 // });
 
+// query params
+app.get("/userQuery", (req, res) => {
+  console.log("suk1", req.query);
+  res.send({
+    firstname: "Chanda",
+    lastName: "Sukesh",
+  });
+});
+
+// params
+app.get("/userParam/:userId", (req, res) => {
+  console.log("suk1", req.params);
+  res.send({
+    firstname: "Chanda",
+    lastName: "Sukesh",
+  });
+});
+
 app.listen(3000, () => {
   console.log("app is listening");
 });
