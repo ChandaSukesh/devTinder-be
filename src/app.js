@@ -1,35 +1,46 @@
 const express = require("express");
+const connectDB = require("./config/database");
+const User = require("./models/user");
 
 const app = express();
 
-// ******* sequence of routes matters alot ********
+// if we keep anything in use then it gets applies for all request, so middlewares, we define using 'use'
+// this middleware is used to read json objects which we are sending from postman post method
+app.use(express.json());
 
-// here / means anything that matches with that /
-//  so even if we enter /hello or /test it will go to this route only.Becoz it matches with /
+app.post("/signup", async (req, res) => {
+  const userObj = {
+    firstName: "Virat",
+    lastName: "Kholi",
+    emailId: "viratkholi@yahoo.in",
+    password: "123123",
+    age: 35,
+    gender: "Male",
+  };
+  // Creating a new instance of a User model
+  const user = new User(userObj);
 
-app.use("/", (req, res) => {
-  res.send("This is main route");
+  // this below line is used when u send data from postman instead of userObj above, this is used to send dynamic data
+  // const user = new User(req.body);
+
+  // Always wrap mongoose operation in try and catch, also wrap with async and await
+  try {
+    await user.save();
+    res.send("User added successfully");
+  } catch (err) {
+    res.status(400).send("Error while sending user!!");
+  }
 });
 
-// the below arrow function is known as request handler
-// this is called when matched with /hello
-// also matches pattern is "/hello/*""
-// /hello123 does not matches, even / after hello is important "hello/"
-app.use("/hello", (req, res) => {
-  res.send("Hello from server..");
-});
-
-app.use("/test", (req, res) => {
-  res.send("Hello test from server..");
-});
-
-// this route never get executed becoz
-// in order of sequence everytime the above /test route only gets executed
-
-app.use("/test/2", (req, res) => {
-  res.send("Hello test2 from server..");
-});
-
-app.listen(3000, () => {
-  console.log("server is listening...");
-});
+// here always first data connection should happen first later server should start listening
+// this is  standard rule
+connectDB()
+  .then(() => {
+    console.log("Data connection successful");
+    app.listen(3000, () => {
+      console.log("server is listening...");
+    });
+  })
+  .catch((err) => {
+    console.error("Data error!!", err);
+  });

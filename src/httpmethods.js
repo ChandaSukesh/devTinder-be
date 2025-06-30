@@ -3,6 +3,7 @@ const express = require("express");
 const app = express();
 
 // This below use wil get print but not get as the order matters,
+// app.use it is used to handle any kind of request, either get,post,put delete etc..
 // app.use("/user", (req, res) => {
 //   res.send("This gets print");
 // });
@@ -47,7 +48,7 @@ app.get("/userQuery", (req, res) => {
   });
 });
 
-// params
+// path params(route params)
 app.get("/userParam/:userId", (req, res) => {
   console.log("suk1", req.params);
   res.send({
