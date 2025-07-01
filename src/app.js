@@ -18,17 +18,18 @@ app.post("/signup", async (req, res) => {
     gender: "Male",
   };
   // Creating a new instance of a User model
-  const user = new User(userObj);
+  // This is used while sending static data
+  // const user = new User(userObj);
 
   // this below line is used when u send data from postman instead of userObj above, this is used to send dynamic data
-  // const user = new User(req.body);
+  const user = new User(req.body);
 
   // Always wrap mongoose operation in try and catch, also wrap with async and await
   try {
     await user.save();
     res.send("User added successfully");
   } catch (err) {
-    res.status(400).send("Error while sending user!!");
+    res.status(400).send(`Error while sending user!!::${err}`);
   }
 });
 
